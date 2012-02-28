@@ -1,4 +1,4 @@
-# vim: set fileencoding=utf8:
+# vim: set fileencoding=utf-8 :
 from setuptools import setup, find_packages
 
 version = '0.1.0'
@@ -33,11 +33,11 @@ setup(
     include_package_data = True,
     install_requires=[
         'distribute',
+        'django>=1.3',
         'setuptools-git',
     ],
     test_suite='runtests.runtests',
     tests_require=[
-        'django>=1.3',
         'PyYAML',
     ],
 )

@@ -1,38 +1,48 @@
-#!/usr/bin/env python
-# vim: set fileencoding=utf8:
+# vim: set fileencoding=utf-8 :
 """
 Automatically exected commands
 
 
 AUTHOR:
     lambdalisue[Ali su ae] (lambdalisue@hashnote.net)
-    
-Copyright:
-    Copyright 2011 Alisue allright reserved.
 
 License:
-    Licensed under the Apache License, Version 2.0 (the "License"); 
-    you may not use this file except in compliance with the License.
-    You may obtain a copy of the License at
+    The MIT License (MIT)
 
-        http://www.apache.org/licenses/LICENSE-2.0
+    Copyright (c) 2012 Alisue allright reserved.
 
-    Unliss required by applicable law or agreed to in writing, software
-    distributed under the License is distrubuted on an "AS IS" BASICS,
-    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-    See the License for the specific language governing permissions and
-    limitations under the License.
-"""
-__AUTHOR__ = "lambdalisue (lambdalisue@hashnote.net)"
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files (the "Software"), to
+    deal in the Software without restriction, including without limitation the
+    rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+    sell copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be included in
+    all copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+    FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+    IN THE SOFTWARE.
+
+"""   
+from __future__ import with_statement
 from django.conf import settings
 from django.db import models
+from django.contrib.auth.models import User
 from django.contrib.auth import models as auth_models
 from django.contrib.auth.management import create_superuser
 from django.db.models import signals
 
-settings.AUTO_CREATE_USER = getattr(settings, 'AUTO_CREATE_USER', True)
+USERNAME = 'admin'
+PASSWORD = 'password'
+EMAIL = 'admin@test.com'
 
-if settings.DEBUG and settings.AUTO_CREATE_USER:
+if settings.DEBUG:
     # From http://stackoverflow.com/questions/1466827/ --
     #
     # Prevent interactive question about wanting a superuser created. (This code
@@ -41,24 +51,17 @@ if settings.DEBUG and settings.AUTO_CREATE_USER:
     #
     # Create our own test user automatically.
     def create_testuser(app, created_models, verbosity, **kwargs):
-        USERNAME = getattr(settings, 'AUTO_CREATE_USERNAME', 'admin')
-        PASSWORD = getattr(settings, 'AUTO_CREATE_PASSWORD', 'password')
-        EMAIL = getattr(settings, 'AUTO_CREATE_EMAIL', 'admin@test.com')
-
-        if getattr(settings, 'AUTO_CREATE_USER_CLASS', None):
-            User = models.get_model(*settings.AUTO_CREATE_USER_CLASS.rsplit('.', 1))
-        else:
-            from django.contrib.auth.models import User
-
         try:
             User.objects.get(username=USERNAME)
         except User.DoesNotExist:
-            print '*' * 80
-            print 'Creating test user -- login: %s, password: %s' % (USERNAME, PASSWORD)
-            print '*' * 80
+            if verbosity > 1:
+                print '*' * 80
+                print 'Creating test user -- login: %s, password: %s' % (USERNAME, PASSWORD)
+                print '*' * 80
             assert User.objects.create_superuser(USERNAME, EMAIL, PASSWORD)
         else:
-            print 'Test user already exists. -- login: %s, password: %s' % (USERNAME, PASSWORD)
+            if verbosity > 1:
+                print 'Test user already exists. -- login: %s, password: %s' % (USERNAME, PASSWORD)
     signals.post_syncdb.disconnect(
         create_superuser,
         sender=auth_models,

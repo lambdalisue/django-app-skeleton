@@ -1,6 +1,6 @@
 # vim: set fileencoding=utf-8 :
 """
-Mini blog views
+An extra models for using unittest
 
 
 AUTHOR:
@@ -31,33 +31,11 @@ License:
 
 """   
 from __future__ import with_statement
-from django.views.generic import ListView
-from django.views.generic import DetailView
-from django.views.generic import CreateView
-from django.views.generic import UpdateView
-from django.views.generic import DeleteView
-from django.core.urlresolvers import reverse
+from django.db import models
 
-from models import Entry
-from forms import EntryForm
+class Article(models.Model):
+    title = models.CharField('title', max_length=200, default='No title')
+    body = models.TextField('body', blank=True, default='')
 
-class EntryListView(ListView):
-    model = Entry
-
-class EntryDetailView(DetailView):
-    model = Entry
-    slug_field = 'title'
-
-class EntryCreateView(CreateView):
-    form_class = EntryForm
-    model = Entry
-
-class EntryUpdateView(UpdateView):
-    form_class = EntryForm
-    model = Entry
-
-class EntryDeleteView(DeleteView):
-    model = Entry
-    def get_success_url(self):
-        return reverse('blogs-entry-list')
-
+    def __unicode__(self):
+        return self.title
