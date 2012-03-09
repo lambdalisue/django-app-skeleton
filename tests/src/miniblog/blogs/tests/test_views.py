@@ -34,7 +34,7 @@ from __future__ import with_statement
 from django.test import TestCase
 
 class EntryViewTestCase(TestCase):
-    fixtures = ['blogs_test.yaml']
+    fixtures = ['tests_miniblog_blogs_test.yaml']
 
     def test_list(self):
         response = self.client.get('/')

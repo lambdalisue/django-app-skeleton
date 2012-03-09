@@ -1,3 +1,7 @@
+# vim: set fileencoding=utf-8 :
+version = (0, 1, 0)
+__version__ = '.'.join(map(str, version))
+
 from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
 

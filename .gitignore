@@ -1,5 +1,6 @@
 .ropeproject
 .project
+.sass-cache
 *.pyc
 *.egg
 *.egg-info
@@ -8,3 +9,6 @@
 /tests/*.db
 /tests/static/collection
 /tests/media
+/reports
+/coverage
+/docs/_build
